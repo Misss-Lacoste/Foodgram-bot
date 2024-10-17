@@ -1,10 +1,9 @@
+import os
 import telebot
 from telebot import types
 import webbrowser
 
-
-key_tg = None
-bot = telebot.TeleBot(key_tg)
+bot = telebot.TeleBot(os.environ['TELEGRAM_BOT_KEY'])
 
 @bot.message_handler(commands=["site", "website"]) # пропишем декоратор для команды перехода на сайт
 def site(message):
