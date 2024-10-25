@@ -6,6 +6,12 @@ import webbrowser
 
 bot = telebot.TeleBot(os.environ['TELEGRAM_BOT_KEY'])
 
+dishes_from_DB = 0
+def dishes_output(message): #вывод блюд
+    for i in dishes_from_DB['response']['items']:
+        bot.send_message(message.chat.id, f"{i['name']}")
+        bot.send_message(message.chat.id, f"{i['recipe']}")
+
 @bot.message_handler(commands=["site", "website"]) # пропишем декоратор для команды перехода на сайт
 def site(message):
     webbrowser.open("https://bla-bla-bla") #ссылка на сайт
@@ -50,6 +56,8 @@ def func_food(message):
     if message.text.lower() == 'стоп':
         a = {'ingrediends': ingrediends[:]}
         OUR_JSON_LIST = json.dumps(a).encode('utf8').decode()
+        dishes_from_DB = json.loads() #сюда файл из базы данных, нужно допилить
+        dishes_output(message) #вывод блюд
         ingrediends.clear()
         print(a)
         return
