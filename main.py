@@ -12,6 +12,12 @@ def dishes_output(message): #вывод блюд
         bot.send_message(message.chat.id, f"{i['name']}")
         bot.send_message(message.chat.id, f"{i['recipe']}")
 
+dishes_from_DB = 0
+def dishes_output(message): #вывод блюд
+    for i in dishes_from_DB['response']['items']:
+        bot.send_message(message.chat.id, f"{i['name']}")
+        bot.send_message(message.chat.id, f"{i['recipe']}")
+
 @bot.message_handler(commands=["site", "website"]) # пропишем декоратор для команды перехода на сайт
 def site(message):
     webbrowser.open("https://bla-bla-bla") #ссылка на сайт
