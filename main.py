@@ -3,18 +3,13 @@ import json
 import telebot
 from telebot import types
 import webbrowser
+import requests
 
-bot = telebot.TeleBot('7522218835:AAEqvInCVD0khuKkKT267L4YfIzylOGKL40')
+bot = telebot.TeleBot(os.environ['TELEGRAM_BOT_KEY'])
 
-dishes_from_DB = 0
-def dishes_output(message): #вывод блюд
-    for i in dishes_from_DB['response']['items']:
-        bot.send_message(message.chat.id, f"{i['name']}")
-        bot.send_message(message.chat.id, f"{i['recipe']}")
-
-dishes_from_DB = 0
-def dishes_output(message): #вывод блюд
-    for i in dishes_from_DB['response']['items']:
+dishes_from_DB = []
+def dishes_output(message, dishes_from_DB): #вывод блюд
+    for i in dishes_from_DB:
         bot.send_message(message.chat.id, f"{i['name']}")
         bot.send_message(message.chat.id, f"{i['recipe']}")
 
@@ -67,14 +62,18 @@ ingrediends = []
 @bot.message_handler(content_types=['food'])
 def func_food(message):
     if message.text.lower() == 'стоп':
-        a = {'ingrediends': ingrediends[:]}
-        OUR_JSON_LIST = json.dumps(a).encode('utf8').decode()
-        dishes_from_DB = json.loads() #сюда файл из базы данных, нужно допилить
-        dishes_output(message) #вывод блюд
+        # a = {'ingrediends': ingrediends[:]}
+        # OUR_JSON_LIST = json.dumps(a).encode('utf8').decode()
+        #dishes_from_DB = json.loads(requests.request(method='get', url='http://127.0.0.1:8000/api/recipy', data=a).json())
+        # dishes_from_DB = json.load(open("C:\egeinf\eee.json"))
+        dishes_from_DB = [{"name": "Щи", "recipe": "1. Мясо промываем, кладем в кастрюлю, заливаем холодной водой и доводим до кипения, периодически снимая с поверхности шум. Затем уменьшаем огонь и варим в течение часа. Мясо вынимаем, нарезаем ипериодически снимая с поверхности шум. Затем уменьшаем огонь и варим в течение часа. Мясо вынимаем, нарезаем ивозвращаем обратно.\n2.Лук и морковь очищаем. Лук режем мелко, а морковь трем на терке.\n3. На раскаленной сковородеподогреваем небольшое количество растительного масла и обжариваем на нем лук до мягкости. Добавляем морковь и томатнуюпасту и тушим все вместе 5-7 минут.\n4. Картофель очищаем, нарезаем кубиком, капусту шинкуем и добавляем овощи в бульон.Еще раз доводим до кипения.\n5. Добавляем в суп зажарку и варим 20 минут, затем соль растираем с чесноком, добавляем всуп, перчим, добавляем лавровый лист. Зелень мелко рубим.\n6. Даем настояться в течение 10 минут под крышкой.", "time":"1:00:00"}, {"name": "Борщ", "recipe": "1. Положите в кастрюлю мясо, залейте водой и поставьте на плиту вариться. Послезакипания убавьте огонь до минимума.\n2. Нашинкуйте капусту и нарежьте кубиками или соломкой картошку и добавьте.\n3.Натрите на крупной терке или нарежьте тоненькой соломкой морковь и свеклу.\n4. Поставьте сковороду нагреваться насредний огонь, влейте в нее растительное масло. Когда она станет горячей, выложите свеклу и морковь.\n5.Перемешайтеовощи и добавьте к ним лук.\n6. Обжаривайте овощи, пока они не станут мягкими и примерно однородного цвета. Не забывайтерегулярно перемешивать.", "time": "1:20:00"}, {"name": "Картошка жареная", "recipe": "1. Гречневую крупу перебрать ихорошо промыть. Вскипятить воду.\n2. Добавить крупу и соль.\n3. Уменьшить огонь, накрыть крышкой и варить гречку 20минут.", "time": "0:30:00"}]
+        bot.send_message(message.chat.id, text=f"{str(ingrediends)}")
+        dishes_output(message, dishes_from_DB) #вывод блюд
         ingrediends.clear()
-        print(a)
+        # print(a)
         return
     ingrediends.append(message.text)
+    bot.send_message(message.chat.id, text=f"{str(ingrediends)}")
     sent = bot.send_message(message.chat.id, text='Что-нибудь еще?')
     bot.register_next_step_handler(sent, func_food)
 
@@ -116,4 +115,4 @@ if __name__ == "__main__":
             try:
                 bot.polling(none_stop=True)
             except Exception as e:
-                print(e)
+                print("POLLING",e)
