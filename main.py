@@ -36,7 +36,7 @@ def get_text_message(message):
         bot.send_photo(message.chat.id,
                        'https://alumni.hse.ru/mirror/pubs/share/368986685')
         keyboard = types.InlineKeyboardMarkup()  # начинаем операцию по внедрению встроенных кнопок
-        key_site = types.InlineKeyboardButton(text='Перейти на веб-сайт', url="https://espanol.online/lexic/by_theme?language=ru")
+        key_site = types.InlineKeyboardButton(text='Перейти на веб-сайт', url="http://127.0.0.1:8000")
         key_food = types.InlineKeyboardButton(text='Вписать ингредиенты', callback_data='food_btn')
         keyboard.add(key_food)
         keyboard.add(key_site)
